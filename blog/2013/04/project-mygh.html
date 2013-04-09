@@ -59,7 +59,7 @@ Select NO:
 # 番号を入力しないでリターンで終了
 </code></pre>
 <p><br/>blog/blogindex.html などを一斉に更新する時は -index all</p>
-<pre><code>% ruby193 local-run.rb -index all
+<pre><code>% ./mygh-run.rb -index all
 </code></pre>
 <p>個別に指定する時は<br/>-index blog =&gt; blog/blogindex.html<br/>-index word =&gt; blog/categoryindex.html<br/>-index year =&gt; blog/archiveindex.html<br/>-page word =&gt; blog/category/配下<br/>-page year =&gt; blog/archives/配下<br/><br/><br/>記事をHTMLファイルとして出力した後に /path/to/data/post 内のテキストファイルを編集すると<br/>HTML ファイルの内容と Text ファイルの内容は不一致になる為 HTML ファイルの<br/>アップデートが必要になる。u すると編集したテキストファイルの内容に従って<br/>HTML ファイルを上書きする。</p>
 <pre><code>% ./mygh-run.rb -l post
