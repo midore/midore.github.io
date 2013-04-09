@@ -23,7 +23,7 @@
 </div>
 <div id='entry_content'>
 <p><a href='./blog/2013/04/keychainapp.html'>Keychain.app</a>の結末。
-<br/><br/>結局 git のバージョンをあげたら<br/>(Xcode に入っていた git を使うのをやめて1.8系にした)<br/>あっさり解決。<br/><br/>Keychain.app がロックされている時に git push すると以前のように<br/>ユーザーパスワードを尋ねてくれるようになった。よかった。</p>
+<br/><br/>結局 git のバージョンをあげたら<br/>(Xcode に入っていた git を使うのをやめて1.8系にした)<br/>あっさり解決。<br/><br/>Keychain.app がロックされている時に git push すると以前のように<br/>ユーザーパスワードを尋ねてくれるようになった。よかった。<br/><br/>とおもいきや、不定期に（？）Keychain.app がロックされている時に git push すると<br/>またもや ssh key のパスワードを尋ねられてしまったので<br/>その時にパスワードを入力することはしないでキャンセルし<br/>おもむろに ssh-agent のプロセスを kill してみて git push しなおすと、<br/>Keychain.app は従来どおりにロック解除するユーザーパスワードを求めてくれたので、<br/>そのまま git push することができた。<br/><br/>git のバージョンは関係なかったのかな...</p>
 </div>
 </div>
 

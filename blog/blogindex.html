@@ -19,6 +19,45 @@
 
 <div id='entry'>
 <div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/mygh-option-index.html'>myGh option index</a></h3><h3 class='entry_published'>2013-04-10</h3><h3 class='entry_category'><a href='./blog/category/mygh.html'>Mygh</a></h3>
+</div>
+<div id='entry_content'>
+<p>./mygh-run -index days<br/>を実行すると</p>
+<pre><code>blog/blogindex.html
+blog/categoryindex.html
+blog/category/配下のファイル
+</code></pre>
+<p>新しい記事を公開した時にその記事のカテゴリーを上記のファイルに反映させる為のもの。<br/><br/>-index word</p>
+<pre><code>blog/categoryindex.html
+blog/category/配下
+</code></pre>
+<p><br/>-index year</p>
+<pre><code>blog/archiveindex.html
+blog/archives/配下
+</code></pre>
+<p><br/>-index all</p>
+<pre><code>blog/blogindex.html
+blog/categoryindex.html
+blog/category/配下
+blog/archiveindex.html
+blog/archives/配下
+</code></pre>
+<p><br/>-page オプションは削除。</p>
+</div>
+</div>
+
+<div id='entry'>
+<div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app</a></h3><h3 class='entry_published'>2013-04-10</h3><h3 class='entry_category'><a href='./blog/category/mygh.html'>Mygh</a> | <a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a></h3>
+</div>
+<div id='entry_content'>
+<p><a href='./blog/2013/04/keychainapp.html'>Keychain.app</a>の結末。
+<br/><br/>結局 git のバージョンをあげたら<br/>(Xcode に入っていた git を使うのをやめて1.8系にした)<br/>あっさり解決。<br/><br/>Keychain.app がロックされている時に git push すると以前のように<br/>ユーザーパスワードを尋ねてくれるようになった。よかった。<br/><br/>とおもいきや、不定期に（？）Keychain.app がロックされている時に git push すると<br/>またもや ssh key のパスワードを尋ねられてしまったので<br/>その時にパスワードを入力することはしないでキャンセルし<br/>おもむろに ssh-agent のプロセスを kill してみて git push しなおすと、<br/>Keychain.app は従来どおりにロック解除するユーザーパスワードを求めてくれたので、<br/>そのまま git push することができた。<br/><br/>git のバージョンは関係なかったのかな...</p>
+</div>
+</div>
+
+<div id='entry'>
+<div id='entry_header'>
 <h3 class='entry_title'><a href='./blog/2013/04/project-mygh.html'>Project myGh</a></h3><h3 class='entry_published'>2013-04-09</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mygh.html'>Mygh</a></h3>
 </div>
 <div id='entry_content'>
@@ -111,60 +150,6 @@ class ViewEntry
 url = git@github.com:midore/myGh.git
 </code></pre>
 <p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。<br/><br/># category  と title を変更。</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/midoregithubio.html'>midore.github.io</a></h3><h3 class='entry_published'>2013-04-07</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a></h3>
-</div>
-<div id='entry_content'>
-<p>https://help.github.com/articles/user-organization-and-project-pages</p>
-<blockquote>
-<p>...<br/>This repo must use the username/username.github.io naming scheme.<br/>...</p></blockquote>
-<p><br/>ブラウザで github.com にログインして新しいレポジトリ<br/>(midore.github.io | https://github.com/midore/midore.github.io)<br/>を作成。すると</p>
-<blockquote>
-<p>We recommend every repository include a README, LICENSE, and .gitignore.<br/>Create a new repository on the command line</p></blockquote>
-<p>とのことなのでブラウザから README などを &quot;click&quot; してコミット。<br/><br/>ローカルで</p>
-<pre><code>$ mkdir midore-github-io
-$ cd midore-github-io
-$ touch README.md
-$ git init
-$ git add README.md
-$ git commit -m &quot;first commit&quot;
-$ git remote add origin https://github.com/midore/midore.github.io.git
-$ git push -u origin master
-
-% git push -u origin master 
-Username for &apos;https://github.com&apos;: 
-Password for &apos;https://midore@github.com&apos;: 
-To https://github.com/midore/midore.github.io.git
- ! [rejected]        master -&gt; master (non-fast-forward)
-error: failed to push some refs to &apos;https://github.com/midore/midore.github.io.git&apos;
-hint: Updates were rejected because the tip of your current branch is behind
-hint: its remote counterpart. Merge the remote changes (e.g. &apos;git pull&apos;)
-hint: before pushing again.
-hint: See the &apos;Note about fast-forwards&apos; in &apos;git push --help&apos; for details.
-</code></pre>
-<p><br/>README などをブラウザからクリックしてコミットしてしまったのでエラーに...。<br/>なので</p>
-<pre><code>% git pull origin master
-warning: no common commits
-remote: Counting objects: 9, done.
-remote: Compressing objects: 100% (6/6), done.
-remote: Total 9 (delta 0), reused 0 (delta 0)
-Unpacking objects: 100% (9/9), done.
-From https://github.com/midore/midore.github.io
- * branch            master     -&gt; FETCH_HEAD
-Auto-merging README.md
-Merge made by the &apos;recursive&apos; strategy.
- .gitignore |    1 +
- LICENSE.md |    1 +
- README.md  |    4 ++++
- 3 files changed, 6 insertions(+)
- create mode 100644 .gitignore
- create mode 100644 LICENSE.md
-</code></pre>
-<p><br/>New GitHub Pages domain: github.io · GitHub<br/>https://github.com/blog/1452-new-github-pages-domain-github-io</p>
 </div>
 </div>
 
