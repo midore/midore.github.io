@@ -1,6 +1,7 @@
 /*-----------------------------------------------
-entry.css
+midore.github.io/css/entry.css
 -----------------------------------------------*/
+
 body{
   padding-top: 2mm;
   padding-left: 8mm;
@@ -11,15 +12,6 @@ body{
   margin-right: 3mm;
   margin-bottom: 3mm;
 }
-
-/*
-color: #2B91AF;
-a {text-decoration: none}
-a:link{color: blue;}
-a:link{color: #0099CC;}
-a:link{color: #6ea1bb;}
-a:link{color: #669999;}
-*/
 
 a:active{color: red;}
 a:link{color: #2B91AF;}
@@ -33,16 +25,17 @@ h1.nav_top {
   margin-left: 8mm;
   padding: 0mm;
   font-family: 'Skia', Helvetica, Arial, sans-serif;
-  font-size: 11pt;
+  font-size: 12pt;
   font-weight: normal;
 }
+
 h1.nav_top a:visited{color: #2B91AF;}
-h1.nav_top a{text-decoration: none}
 h1.nav_top a:hover{color: blue;}
 
 /*
 entries
 -----------------------------------------------*/
+
 div#entries {
   padding-top: 3mm;
   padding-left: 3mm;
@@ -57,6 +50,7 @@ div#entries {
 /*
 entry
 -----------------------------------------------*/
+
 div#entry {
   padding-top: 3mm;
   padding-left: 0mm;
@@ -91,6 +85,7 @@ h3.entry_title{
   font-size: 15pt;
   color: #0099CC;
 }
+
 h3.entry_title a:visited{color: #2B91AF;}
 h3.entry_title a{text-decoration: none}
 
@@ -124,21 +119,12 @@ div#entry_content{
   font-family: 'Menlo', 'Geneva', 'Verdana', 'Optima', 'Helvetica', 'Arial', sans-serif;
 }
 
-/*
-Avenir
-Arial
-Didot
-Geneva
-Verdana
-*/
 div#entry_content p {
   color: #4C4D4C;
   margin: 0px;
   padding: 0px;
-  font-size: 10.5pt;
-  line-height: 1.6em;
-  line-height: 6mm;
-  letter-spacing: 2px;
+  font-size: 10.7pt;
+  line-height: 5.8mm;
   letter-spacing: 0.6mm;
 }
 
@@ -147,10 +133,10 @@ div#entry_content pre {
   padding-left: 3mm;
   padding-right: 3mm;
   padding-bottom: 1.5mm;
-  margin-top:3mm;
-  margin-left:0mm;
+  margin-top:2mm;
+  margin-left:3mm;
   margin-right:5mm;
-  margin-bottom:3mm;
+  margin-bottom:2mm;
   overflow: auto;
   border-top: 1px solid #eeeeee;
   border-right: 1px solid #eeeeee;
@@ -161,7 +147,7 @@ div#entry_content pre {
 
 div#entry_content code {
   font-size: 9pt;
-  line-height: 1.7em;
+  line-height: 1.6em;
   letter-spacing: 1.5px;
   color: #4C4D4C;
   font-family: 'Menlo', 'Monaco', 'Monospace',sans-serif;
@@ -172,10 +158,11 @@ div#entry_content blockquote{
   padding-left: 3mm;
   padding-right: 3mm;
   padding-bottom: 1.5mm;
-  margin-top:3mm;
-  margin-left:0mm;
+  margin-top:2mm;
+  margin-left:3mm;
   margin-right:5mm;
-  margin-bottom:3mm;
+  margin-bottom:2mm;
+  overflow: auto;
   background-color: #FBFDFF;
   border-top: 1px solid #dddddd;
   border-right: 1px solid #dddddd;
@@ -185,7 +172,7 @@ div#entry_content blockquote{
 
 div#entry_content blockquote p{
   font-size: 9.5pt;
-  line-height: 2em;
+  line-height: 1.6em;
   letter-spacing: 2.5px;
   font-style: italic;
   color: #003366;
@@ -193,8 +180,9 @@ div#entry_content blockquote p{
 }
 
 /*
-div archives
+archives
 -----------------------------------------------*/
+
 div#archives {
   padding-top: 3mm;
   padding-left: 3mm;
@@ -217,6 +205,7 @@ div#archives p{
   color: #2B91AF;
   font-family: 'Skia', Helvetica, Arial, sans-serif;
 }
+
 div#archives p a {text-decoration: none}
 
 h2 {
@@ -238,6 +227,7 @@ h2 {
 /*
 div category
 -----------------------------------------------*/
+
 div#category {
   padding-top: 3mm;
   padding-left: 3mm;
@@ -260,11 +250,13 @@ div#category p{
   color: #2B91AF;
   font-family: 'Skia', Helvetica, Arial, sans-serif;
 }
+
 div#category p a{text-decoration: none}
 
 /*
 index page
 -----------------------------------------------*/
+
 div#index_header{
   padding-top: 8mm;
   padding-left: 3mm;
@@ -318,6 +310,7 @@ div#index_body p a{text-decoration: none}
 /*
 div footer
 -----------------------------------------------*/
+
 div#footer{
   padding-top: 0mm;
   padding-left: 2mm;
@@ -339,3 +332,12 @@ div#footer p{
   line-height: 0em;
   font-family: 'Skia', Helvetica, Arial, sans-serif;
 }
+
+/*
+color: #2B91AF;
+a {text-decoration: none}
+a:link{color: blue;}
+a:link{color: #0099CC;}
+a:link{color: #6ea1bb;}
+a:link{color: #669999;}
+*/
