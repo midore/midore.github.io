@@ -4,7 +4,7 @@
   <head>
     <meta content='text/html;charset=utf-8' http-equiv='Content-Type'/>
     <base href='http://midore.github.io/'/>
-    <title>Blog</title>
+    <title>Project myGh</title>
     <link href='./css/entry.css' media='all' rel='stylesheet' type='text/css'/>
   </head>
 
@@ -88,83 +88,6 @@ class ViewEntry
   def set_view_status
 </code></pre>
 <p>に記述。<br/># @uri が空欄なら下書きファイルとみなすことにしてあるが、実際にはHTMLファイルが<br/># 存在していた場合は下書きとは言えない。この場合については何も考慮していない...<br/><br/>3) blogindex.html 更新のタイミング<br/>blog/blogindex.html や blog/categoryindex.html などを更新するタイミングは完全手動。</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/keychainapp.html'>keychain.app</a></h3><h3 class='entry_published'>2013-04-09</h3><h3 class='entry_category'><a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/ssh.html'>SSH</a></h3>
-</div>
-<div id='entry_content'>
-<p><a href='./blog/2013/04/draft-title.html'>先日</a> の 件。
-<br/><br/>新しいレポジトリーを作らなくても git push しようとすると keychain.app　が github の ssh　key のパスワードをいちいち尋ねてくる！と判明。驚く。<br/><br/>git push する前に keychain.app のロックを解除しておけば尋ねられないようだが...。<br/><br/>keychain.app がロックされている時、解除するユーザーのパスワードを求めないでいきなり git のssh パスワードを求めてくるのはなぜか。この鍵束は壊れてるのかな...。</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: ssh keys in keychain.app</a></h3><h3 class='entry_published'>2013-04-07</h3><h3 class='entry_category'><a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a></h3>
-</div>
-<div id='entry_content'>
-<p>新しい repogitory を作り、git push したらユーザー名とパスワードを尋ねられしまったので、<br/>.git/config の url をgit@ で始まるパスに変更。</p>
-<pre><code># url = https://github.com/midore/myGh.git
-url = git@github.com:midore/myGh.git
-</code></pre>
-<p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。<br/><br/># category  と title を変更。</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/midoregithubio.html'>midore.github.io</a></h3><h3 class='entry_published'>2013-04-07</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a></h3>
-</div>
-<div id='entry_content'>
-<p>https://help.github.com/articles/user-organization-and-project-pages</p>
-<blockquote>
-<p>...<br/>This repo must use the username/username.github.io naming scheme.<br/>...</p></blockquote>
-<p><br/>ブラウザで github.com にログインして新しいレポジトリ<br/>(midore.github.io | https://github.com/midore/midore.github.io)<br/>を作成。すると</p>
-<blockquote>
-<p>We recommend every repository include a README, LICENSE, and .gitignore.<br/>Create a new repository on the command line</p></blockquote>
-<p>とのことなのでブラウザから README などを &quot;click&quot; してコミット。<br/><br/>ローカルで</p>
-<pre><code>$ mkdir midore-github-io
-$ cd midore-github-io
-$ touch README.md
-$ git init
-$ git add README.md
-$ git commit -m &quot;first commit&quot;
-$ git remote add origin https://github.com/midore/midore.github.io.git
-$ git push -u origin master
-
-% git push -u origin master 
-Username for &apos;https://github.com&apos;: 
-Password for &apos;https://midore@github.com&apos;: 
-To https://github.com/midore/midore.github.io.git
- ! [rejected]        master -&gt; master (non-fast-forward)
-error: failed to push some refs to &apos;https://github.com/midore/midore.github.io.git&apos;
-hint: Updates were rejected because the tip of your current branch is behind
-hint: its remote counterpart. Merge the remote changes (e.g. &apos;git pull&apos;)
-hint: before pushing again.
-hint: See the &apos;Note about fast-forwards&apos; in &apos;git push --help&apos; for details.
-</code></pre>
-<p><br/>README などをブラウザからクリックしてコミットしてしまったのでエラーに...。<br/>なので</p>
-<pre><code>% git pull origin master
-warning: no common commits
-remote: Counting objects: 9, done.
-remote: Compressing objects: 100% (6/6), done.
-remote: Total 9 (delta 0), reused 0 (delta 0)
-Unpacking objects: 100% (9/9), done.
-From https://github.com/midore/midore.github.io
- * branch            master     -&gt; FETCH_HEAD
-Auto-merging README.md
-Merge made by the &apos;recursive&apos; strategy.
- .gitignore |    1 +
- LICENSE.md |    1 +
- README.md  |    4 ++++
- 3 files changed, 6 insertions(+)
- create mode 100644 .gitignore
- create mode 100644 LICENSE.md
-</code></pre>
-<p><br/>New GitHub Pages domain: github.io · GitHub<br/>https://github.com/blog/1452-new-github-pages-domain-github-io</p>
 </div>
 </div>
 

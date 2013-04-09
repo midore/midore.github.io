@@ -4,7 +4,7 @@
   <head>
     <meta content='text/html;charset=utf-8' http-equiv='Content-Type'/>
     <base href='http://midore.github.io/'/>
-    <title>test Change title</title>
+    <title>OS X 10.8.3: ssh keys in keychain.app</title>
     <link href='./css/entry.css' media='all' rel='stylesheet' type='text/css'/>
   </head>
 
@@ -15,16 +15,22 @@
       </h1>
     </div>
 
-    <div id='entries'><div id='entry'>
-<div id='entry_header'><h3 class='entry_title'><a href='./blog/2013/04/draft-title.html'>test Change title</a></h3><h3 class='entry_published'>2013-04-07</h3><h3 class='entry_category'><a href='./blog/category/ruby.html'>Ruby</a> | <a href='./blog/category/git.html'>Git</a></h3></div>
+    <div id='entries'>
+
+<div id='entry'>
+<div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: ssh keys in keychain.app</a></h3><h3 class='entry_published'>2013-04-07</h3><h3 class='entry_category'><a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a></h3>
+</div>
 <div id='entry_content'>
 <p>新しい repogitory を作り、git push したらユーザー名とパスワードを尋ねられしまったので、<br/>.git/config の url をgit@ で始まるパスに変更。</p>
 <pre><code># url = https://github.com/midore/myGh.git
 url = git@github.com:midore/myGh.git
 </code></pre>
-<p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。</p>
+<p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。<br/><br/># category  と title を変更。</p>
 </div>
-</div></div>
+</div>
+
+</div>
 
   </body>
 </html>
