@@ -82,7 +82,7 @@ Select Request [i/e/t/x/u/r/h]:
 % git push -u origin master
 </code></pre>
 <p><br/>[メモ]<br/>1) オプション<br/>下書き記事一覧は -l で表示。公開した記事一覧は -l post で表示。<br/>といったようにオプションで一覧内容を区別してみたが便利なのか不便なのか<br/>わからなくなってきている。<br/>-l で下書きも公開も両方表示された方が便利かもしれない...。<br/>-l post した時に公開した記事「だけ」が表示されるのは維持しつつ。<br/><br/>2) status 欄<br/>[-][-] =&gt; 下書きファイルである。 /path/to/data/draft に保存されている。<br/>[+][+] =&gt; 公開したファイルである。 /path/to/data/post に保存されている。<br/>[+][-] =&gt; 公開したファイルであるが公開後にテキストファイルが変更されている。<br/>/path/to/data/post に保存されている。<br/><br/>テキストファイルの File.mtime とテキストファイルに記述されている--updated が同一ならば<br/>[+][+]<br/>で、テキストファイルの File.mtime とテキストファイルに記述されている--updated が異なると<br/>テキストファイルは編集されていると判断し<br/>[+][-]<br/>と表示。<br/>これは myGh | https://github.com/midore/myGh.git の</p>
-<pre><code>#  lib/myGh/lib/myghblog/entry.rb
+<pre><code>#  lib/myghblog/entry.rb
 class ViewEntry
   ...(略)
   def set_view_status
