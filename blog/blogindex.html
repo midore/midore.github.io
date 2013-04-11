@@ -19,15 +19,25 @@
 
 <div id='entry'>
 <div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp-2.html'>OS X 10.8.3: Keychain.app [2]</a></h3><h3 class='entry_published'>2013-04-11</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a></h3>
+</div>
+<div id='entry_content'>
+<p><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app</a>の続き。
+<br/><br/>試してみたこと。<br/><br/>[1] keychain.app のlogin 以外の keychain に存在していた github のssh key を削除。<br/><br/>[2] 知っているはずのホストのIP を忘れる。<br/>% rm ~/.ssh/known_hosts<br/><br/>[3] プロセスの有無を確認し、もし存在していたらなくす。<br/>% ps aux | grep ssh<br/>% kill xxxx &lt;-  xxxx はプロセスナンバー<br/><br/>[4] git push して Keychaina.app に鍵登録を促す。<br/>% cd 自分のレポジトリー<br/>% git commit -v<br/>% git push origin master<br/><br/>Keychain.app が ssh key の登録を求めるので key を Keychain.app に登録する。<br/><br/>[5] Keychain.app の鍵をロックした状態でもう一度 git push してみる。<br/>Keychain.app のログインkeychain 鍵をロックした状態で、git push を試してみたところ<br/>keychain.app をロック解除する為のパスワードを求められ Keychain をロック解除すると<br/>git push できた。以前の状態に戻った！<br/><br/><br/>結局なんだったのか... なんとなくわかったこと。<br/><br/>以前使用していた Keychain.app （OS X 10.8.1 以前とか） の鍵を取り込んで使用する<br/>のはよくないのかな。あるいは、login 以外の Keychain （新規に作った keychain）<br/>に git のssh 鍵をおいていたりすると、へんなことが発生するのかもしれない。<br/>(へんなこととは、github のssh 鍵が Keychain.app に登録されているにもかかわらず<br/>Keychain.app が github ssh のパスワードをきいてきたりする)</p>
+</div>
+</div>
+
+<div id='entry'>
+<div id='entry_header'>
 <h3 class='entry_title'><a href='./blog/2013/04/mygh-option-index.html'>myGh option index</a></h3><h3 class='entry_published'>2013-04-10</h3><h3 class='entry_category'><a href='./blog/category/mygh.html'>Mygh</a></h3>
 </div>
 <div id='entry_content'>
-<p>./mygh-run -index days<br/>を実行すると</p>
+<p>./mygh-run -index days<br/>を実行すると下記のファイルを更新する。</p>
 <pre><code>blog/blogindex.html
 blog/categoryindex.html
 blog/category/配下のファイル
 </code></pre>
-<p>新しい記事を公開した時にその記事のカテゴリーを上記のファイルに反映させる為のもの。<br/><br/>-index word</p>
+<p>新しい記事を公開した時にその記事のカテゴリーを反映させる為のもの。<br/><br/>-index word</p>
 <pre><code>blog/categoryindex.html
 blog/category/配下
 </code></pre>
@@ -137,19 +147,6 @@ class ViewEntry
 <div id='entry_content'>
 <p><a href='./blog/2013/04/draft-title.html'>先日</a> の 件。
 <br/><br/>新しいレポジトリーを作らなくても git push しようとすると keychain.app　が github の ssh　key のパスワードをいちいち尋ねてくる！と判明。驚く。<br/><br/>git push する前に keychain.app のロックを解除しておけば尋ねられないようだが...。<br/><br/>keychain.app がロックされている時、解除するユーザーのパスワードを求めないでいきなり git のssh パスワードを求めてくるのはなぜか。この鍵束は壊れてるのかな...。</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: ssh keys in keychain.app</a></h3><h3 class='entry_published'>2013-04-07</h3><h3 class='entry_category'><a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a></h3>
-</div>
-<div id='entry_content'>
-<p>新しい repogitory を作り、git push したらユーザー名とパスワードを尋ねられしまったので、<br/>.git/config の url をgit@ で始まるパスに変更。</p>
-<pre><code># url = https://github.com/midore/myGh.git
-url = git@github.com:midore/myGh.git
-</code></pre>
-<p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。<br/><br/># category  と title を変更。</p>
 </div>
 </div>
 
