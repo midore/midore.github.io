@@ -4,7 +4,7 @@
   <head>
     <meta content='text/html;charset=utf-8' http-equiv='Content-Type'/>
     <base href='http://midore.github.io/'/>
-    <title>OS X 10.8.3: Keychain.app</title>
+    <title>OS X 10.8.3: Keychain.app [3]</title>
     <link href='./css/entry.css' media='all' rel='stylesheet' type='text/css'/>
   </head>
 
@@ -19,10 +19,10 @@
 
 <div id='entry'>
 <div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app</a></h3><h3 class='entry_published'>2013-04-10</h3><h3 class='entry_category'><a href='./blog/category/mygh.html'>Mygh</a> | <a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a></h3>
+<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app [3]</a></h3><h3 class='entry_published'>2013-04-10</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
 </div>
 <div id='entry_content'>
-<p><a href='./blog/2013/04/keychainapp.html'>Keychain.app</a>の結末。
+<p><a href='./blog/2013/04/keychainapp.html'>OS X 10.8.3: Keychain.app [2]</a>の続き。
 <br/><br/>結局 git のバージョンをあげたら<br/>(Xcode に入っていた git を使うのをやめて1.8系にした)<br/>あっさり解決。<br/><br/>Keychain.app がロックされている時に git push すると以前のように<br/>ユーザーパスワードを尋ねてくれるようになった。よかった。<br/><br/>とおもいきや、不定期に（？）Keychain.app がロックされている時に git push すると<br/>またもや ssh key のパスワードを尋ねられてしまったので<br/>その時にパスワードを入力することはしないでキャンセルし<br/>おもむろに ssh-agent のプロセスを kill してみて git push しなおすと、<br/>Keychain.app は従来どおりにロック解除するユーザーパスワードを求めてくれたので、<br/>そのまま git push することができた。<br/><br/>git のバージョンは関係なかったのかな...</p>
 </div>
 </div>

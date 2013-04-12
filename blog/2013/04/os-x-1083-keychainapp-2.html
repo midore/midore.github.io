@@ -4,7 +4,7 @@
   <head>
     <meta content='text/html;charset=utf-8' http-equiv='Content-Type'/>
     <base href='http://midore.github.io/'/>
-    <title>OS X 10.8.3: Keychain.app [2]</title>
+    <title>OS X 10.8.3: Keychain.app [4]</title>
     <link href='./css/entry.css' media='all' rel='stylesheet' type='text/css'/>
   </head>
 
@@ -19,10 +19,10 @@
 
 <div id='entry'>
 <div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp-2.html'>OS X 10.8.3: Keychain.app [2]</a></h3><h3 class='entry_published'>2013-04-11</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a></h3>
+<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp-2.html'>OS X 10.8.3: Keychain.app [4]</a></h3><h3 class='entry_published'>2013-04-11</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
 </div>
 <div id='entry_content'>
-<p><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app</a>の続き。
+<p><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app [3]</a>の続き。
 <br/><br/>試してみたこと。<br/><br/>[1] keychain.app のlogin 以外の keychain に存在していた github のssh key を削除。<br/><br/>[2] 知っているはずのホストのIP を忘れる。<br/>% rm ~/.ssh/known_hosts<br/><br/>[3] プロセスの有無を確認し、もし存在していたらなくす。<br/>% ps aux | grep ssh<br/>% kill xxxx &lt;-  xxxx はプロセスナンバー<br/><br/>[4] git push して Keychain.app に鍵登録を促す。<br/>% cd 自分のリポジトリー<br/>% git commit -v<br/>% git push origin master<br/><br/>Keychain.app が ssh key の登録を求めるので key を Keychain.app に登録する。<br/><br/>[5] Keychain.app の鍵をロックした状態でもう一度 git push してみる。<br/>Keychain.app のログインkeychain 鍵をロックした状態で、git push を試してみたところ<br/>keychain.app をロック解除する為のパスワードを求められ Keychain をロック解除すると<br/>git push できた。以前の状態に戻った！<br/><br/><br/>結局なんだったのか... なんとなくわかったこと。<br/><br/>以前使用していた Keychain.app （OS X 10.8.1 以前とか） の鍵を取り込んで使用する<br/>のはよくないのかな。あるいは、login 以外の Keychain （新規に作った keychain）<br/>に git のssh 鍵をおいていたりすると、へんなことが発生するのかもしれない。<br/>(へんなこととは、github のssh 鍵が Keychain.app に登録されているにもかかわらず<br/>Keychain.app が github ssh のパスワードをきいてきたりする)<br/><br/>[追記]<br/>%s/レポ/リポ<br/><br/>そして後日。<br/><br/>midore.github.io のローカルリポジトリから<br/>git push を実行すると問題は何ひとつ解決されていなかったことを理解した。<br/>つまり github の ssh 鍵を Keychain.app に保存済みなのに<br/>git push すると再び github.com の ssh の！パスフレーズを、Keychian.app <br/>に問われてしまったのだった。<br/>（本来は keychain.app をロック解除するパスワードであるはずなのに！）<br/><br/>Keychain.app の鍵束には login、System, System Root がdefault で存在していて<br/>このうちの login 鍵束はスリープ中はロックするように設定している。<br/>そして github ssh key は login 鍵束に保存していた。<br/><br/>新しい鍵束を作って github ssh key だけを新しい鍵束に移動し<br/>この新しい鍵束の設定は、スリープ中にロックするのチェッックが「ついていない」<br/>ことを確認し<br/>guthub ssh key を選択し Access control を開いて<br/>Keychain password を尋ねるにチェックをいれてみた。<br/><br/>しばらくはこれで様子をみようと思う。<br/><br/># もしも、Keychain.app の側に問題がないとしたら、<br/># この問題が<br/># midore.github.io のローカルリポジトリ<br/># 以外のリポジトリーから git push した時にも発生するかどうか確認してみよう。<br/><br/># もしも、midore.github.io のローカルリポジトリ以外では発生しないのだとしたら<br/># midore.github.io の .git/config の url をエディタで書き換えてしまった<br/># ことと関係あるのかもしれない。</p>
 </div>
 </div>
