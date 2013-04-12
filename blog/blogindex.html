@@ -23,7 +23,7 @@
 </div>
 <div id='entry_content'>
 <p><a href='./blog/2013/04/os-x-1083-keychainapp.html'>OS X 10.8.3: Keychain.app</a>の続き。
-<br/><br/>試してみたこと。<br/><br/>[1] keychain.app のlogin 以外の keychain に存在していた github のssh key を削除。<br/><br/>[2] 知っているはずのホストのIP を忘れる。<br/>% rm ~/.ssh/known_hosts<br/><br/>[3] プロセスの有無を確認し、もし存在していたらなくす。<br/>% ps aux | grep ssh<br/>% kill xxxx &lt;-  xxxx はプロセスナンバー<br/><br/>[4] git push して Keychain.app に鍵登録を促す。<br/>% cd 自分のレポジトリー<br/>% git commit -v<br/>% git push origin master<br/><br/>Keychain.app が ssh key の登録を求めるので key を Keychain.app に登録する。<br/><br/>[5] Keychain.app の鍵をロックした状態でもう一度 git push してみる。<br/>Keychain.app のログインkeychain 鍵をロックした状態で、git push を試してみたところ<br/>keychain.app をロック解除する為のパスワードを求められ Keychain をロック解除すると<br/>git push できた。以前の状態に戻った！<br/><br/><br/>結局なんだったのか... なんとなくわかったこと。<br/><br/>以前使用していた Keychain.app （OS X 10.8.1 以前とか） の鍵を取り込んで使用する<br/>のはよくないのかな。あるいは、login 以外の Keychain （新規に作った keychain）<br/>に git のssh 鍵をおいていたりすると、へんなことが発生するのかもしれない。<br/>(へんなこととは、github のssh 鍵が Keychain.app に登録されているにもかかわらず<br/>Keychain.app が github ssh のパスワードをきいてきたりする)</p>
+<br/><br/>試してみたこと。<br/><br/>[1] keychain.app のlogin 以外の keychain に存在していた github のssh key を削除。<br/><br/>[2] 知っているはずのホストのIP を忘れる。<br/>% rm ~/.ssh/known_hosts<br/><br/>[3] プロセスの有無を確認し、もし存在していたらなくす。<br/>% ps aux | grep ssh<br/>% kill xxxx &lt;-  xxxx はプロセスナンバー<br/><br/>[4] git push して Keychain.app に鍵登録を促す。<br/>% cd 自分のリポジトリー<br/>% git commit -v<br/>% git push origin master<br/><br/>Keychain.app が ssh key の登録を求めるので key を Keychain.app に登録する。<br/><br/>[5] Keychain.app の鍵をロックした状態でもう一度 git push してみる。<br/>Keychain.app のログインkeychain 鍵をロックした状態で、git push を試してみたところ<br/>keychain.app をロック解除する為のパスワードを求められ Keychain をロック解除すると<br/>git push できた。以前の状態に戻った！<br/><br/><br/>結局なんだったのか... なんとなくわかったこと。<br/><br/>以前使用していた Keychain.app （OS X 10.8.1 以前とか） の鍵を取り込んで使用する<br/>のはよくないのかな。あるいは、login 以外の Keychain （新規に作った keychain）<br/>に git のssh 鍵をおいていたりすると、へんなことが発生するのかもしれない。<br/>(へんなこととは、github のssh 鍵が Keychain.app に登録されているにもかかわらず<br/>Keychain.app が github ssh のパスワードをきいてきたりする)<br/><br/>[追記]<br/>%s/レポ/リポ<br/><br/>そして後日。<br/><br/>midore.github.io のローカルリポジトリから<br/>git push を実行すると問題は何ひとつ解決されていなかったことを理解した。<br/>つまり github の ssh 鍵を Keychain.app に保存済みなのに<br/>git push すると再びパスフレーズを問われてしまったのだった。<br/><br/>Keychain.app の鍵束には login、System, System Root がdefault で存在していて<br/>このうちの login 鍵束は、スリープ中はロックするように設定している。<br/>そして github ssh key は login 鍵束に保存していた。<br/><br/>新しい鍵束を作って、github ssh key だけを新しい鍵束に移動し<br/>この新しい鍵束の設定は、スリープ中にロックするのチェッックが「ついていない」<br/>ことを確認し<br/>guthub ssh key を選択し Access control を開いて<br/>Keychain password を尋ねるにチェックをいれてみた。<br/><br/>しばらくはこれで様子をみようと思う。<br/><br/># もしも、Keychain.app の側に問題がないとしたら、<br/># この問題が<br/># midore.github.io のローカルリポジトリ<br/># 以外のリポジトリーから git push した時にも発生するかどうか確認してみよう。<br/><br/># もしも、midore.github.io のローカルリポジトリ以外では発生しないのだとしたら<br/># midore.github.io の .git/config の url をエディタで書き換えてしまった<br/># ことと関係あるのかもしれない。</p>
 </div>
 </div>
 
@@ -71,7 +71,7 @@ blog/archives/配下
 <h3 class='entry_title'><a href='./blog/2013/04/project-mygh.html'>Project myGh</a></h3><h3 class='entry_published'>2013-04-09</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mygh.html'>Mygh</a></h3>
 </div>
 <div id='entry_content'>
-<p>myGh | https://github.com/midore/myGh.git は HTML ファイルを作成したり管理する為のレポジトリ。（主に midore.github.io の）<br/><br/>最近きめた仕様。<br/><br/>下書き用テキストファイルの作成。</p>
+<p>myGh | https://github.com/midore/myGh.git は HTML ファイルを作成したり管理する為のリポジトリ。（主に midore.github.io の）<br/><br/>最近きめた仕様。<br/><br/>下書き用テキストファイルの作成。</p>
 <pre><code>% ./mygh-run.rb -draft
 </code></pre>
 <p><br/>下書きテキストファイル一覧。e でファイル編集。MacVim.app 起動。</p>
@@ -85,7 +85,7 @@ blog/archives/配下
 Select Request [i/e/t/x/p/r/h]:
 # e リターン
 </code></pre>
-<p><br/>下書きテキストファイル編集後 p を選択すると HTML ファイルを作成し指定した場所に保存。<br/>（mygh-conf で指定した midore.github.io のローカルにあるレポジトリ内の blog/ 配下）<br/>テキストファイルには公開日時や uri などが付与され<br/>/path/to/data/draft/ から /path/to/data/post へ移動。<br/>（mygh-conf で指定したデータディレクトリ）</p>
+<p><br/>下書きテキストファイル編集後 p を選択すると HTML ファイルを作成し指定した場所に保存。<br/>（mygh-conf で指定した midore.github.io のローカルにあるリポジトリ内の blog/ 配下）<br/>テキストファイルには公開日時や uri などが付与され<br/>/path/to/data/draft/ から /path/to/data/post へ移動。<br/>（mygh-conf で指定したデータディレクトリ）</p>
 <pre><code>% ./mygh-run.rb -l
 ------------------------------------------------------------------------------------------
 	status  |  Publishd or Draft Date    |          title              (category)
@@ -124,8 +124,8 @@ Select NO:
 Select Request [i/e/t/x/u/r/h]:
 # u リターン
 </code></pre>
-<p><br/>ローカルにある midore.github.io の為のレポジトリに移動し<br/>(mygh-conf に記入したディレクトリ　/path/to/my-github-io-repogitory )<br/>HTML files が保存されているのを確認。<br/>git push -u origin master すると http://midore.github.io/blog/配下 が更新される。</p>
-<pre><code>% cd  （自分の github.io のレポジトリ）
+<p><br/>ローカルにある midore.github.io の為のリポジトリに移動し<br/>(mygh-conf に記入したディレクトリ　/path/to/my-github-io-repogitory )<br/>HTML files が保存されているの<br/>git push -u origin master すると http://midore.github.io/blog/配下 が更新される。</p>
+<pre><code>% cd  （自分の github.io のリポジトリ）
 % git status
 # git add ... git commit ... など
 % git push -u origin master
@@ -136,7 +136,7 @@ class ViewEntry
   ...(略)
   def set_view_status
 </code></pre>
-<p>に記述。<br/># @uri が空欄なら下書きファイルとみなすことにしてあるが、実際にはHTMLファイルが<br/># 存在していた場合は下書きとは言えない。この場合については何も考慮していない...<br/><br/>3) blogindex.html 更新のタイミング<br/>blog/blogindex.html や blog/categoryindex.html などを更新するタイミングは完全手動。</p>
+<p>に記述。<br/># @uri が空欄なら下書きファイルとみなすことにしてあるが、実際にはHTMLファイルが<br/># 存在していた場合は下書きとは言えない。この場合については何も考慮していない...<br/><br/>3) blogindex.html 更新のタイミング<br/>blog/blogindex.html や blog/categoryindex.html などを更新するタイミングは完全手動。<br/><br/>[追記]<br/>%s/レポ/リポ</p>
 </div>
 </div>
 
@@ -146,7 +146,7 @@ class ViewEntry
 </div>
 <div id='entry_content'>
 <p><a href='./blog/2013/04/draft-title.html'>先日</a> の 件。
-<br/><br/>新しいレポジトリーを作らなくても git push しようとすると keychain.app　が github の ssh　key のパスワードをいちいち尋ねてくる！と判明。驚く。<br/><br/>git push する前に keychain.app のロックを解除しておけば尋ねられないようだが...。<br/><br/>keychain.app がロックされている時、解除するユーザーのパスワードを求めないでいきなり git のssh パスワードを求めてくるのはなぜか。この鍵束は壊れてるのかな...。</p>
+<br/><br/>新しいリポジトリーを作らなくても git push しようとすると keychain.app　が github の ssh　key のパスワードをいちいち尋ねてくる！と判明。驚く。<br/><br/>git push する前に keychain.app のロックを解除しておけば尋ねられないようだが...。<br/><br/>keychain.app がロックされている時、解除するユーザーのパスワードを求めないでいきなり git のssh パスワードを求めてくるのはなぜか。この鍵束は壊れてるのかな...。</p>
 </div>
 </div>
 
