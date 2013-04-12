@@ -26,7 +26,7 @@
 <pre><code># url = https://github.com/midore/myGh.git
 url = git@github.com:midore/myGh.git
 </code></pre>
-<p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。<br/><br/># category  と title を変更。</p>
+<p><br/>いざ git push すると今度は<br/>ssh 鍵のパスワードを keychain.app に尋ねられてしまった。keychain.app には既に github.com 用の ssh key が登録してあるのだが...<br/>これから github で新しいレポジトリーを作成するたびに keychain.app に ssh 鍵を尋ねられてしまうのだろうか？<br/>以前は、github の ssh 鍵を keychain.app にいちど登録しておけば、keychain.app から再び ssh 鍵を尋ねられることはなかった。<br/><br/>以前のようにするにはどうすればいいのかな。<br/># category  と title を変更。<br/><br/>[追記]<br/>~/my-repogitory/.git/config に保存されている url を変更する正しい方法は<br/>remote set-url<br/>オプションを利用する、でした。<br/>git remote set-url で検索すると情報たくさんあった。</p>
 </div>
 </div>
 
