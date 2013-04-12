@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html lang='ja' xml:lang='ja' xmlns='http://www.w3.org/1999/xhtml'>
+
+  <head>
+    <meta content='text/html;charset=utf-8' http-equiv='Content-Type'/>
+    <base href='http://midore.github.io/'/>
+    <title>OS X 10.8.3: Keychain.app [5]</title>
+    <link href='./css/entry.css' media='all' rel='stylesheet' type='text/css'/>
+  </head>
+
+  <body>
+    <div id='nav'>
+      <h1 class='nav_top'>
+        <a href='./index.html'>Index</a> | <a href='./blog/blogindex.html'>Blog</a> | <a href='./blog/archiveindex.html'>Blog Archives</a> | <a href='./blog/categoryindex.html'>Blog Category</a>
+      </h1>
+    </div>
+
+    <div id='entries'>
+
+<div id='entry'>
+<div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp-5.html'>OS X 10.8.3: Keychain.app [5]</a></h3><h3 class='entry_published'>2013-04-12</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
+</div>
+<div id='entry_content'>
+<p>これまでの経緯。（記事タイトルを統一した）<br/><a href='./blog/2013/04/os-x-1083-keychainapp-2.html'>OS X 10.8.3: Keychain.app [4]</a>
+<br/>&lt;a href=&apos;./blog/2013/04/os-x-1083-keychainapp.html&apos;&gt;OS X 10.8.3: Keychain.app [3]&lt;a&gt;<br/><a href='./blog/2013/04/keychainapp.html'>OS X 10.8.3: Keychain.app [2]</a>
+<br/><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: Keychain.app [1]</a>
+<br/><br/>OS X 10.8.3 Keychain.app のバージョンは 7.0</p>
+<pre><code>% git --version
+git version 1.8.2
+</code></pre>
+<p><br/>[問題]<br/>github.com に ssh でアクセスする為の ssh key は既に Keychain.app に保存済みなのに<br/>github の midore.github.io に対して ssh で git push origin master すると<br/>ssh-keygen で鍵を作成した時に設定したパスワードの入力を「再度」求められてしまう。<br/>（ただしkeychain.app がロックされていなければ発生しない場合もある。）<br/><br/>本来ならば「keychain.app のロックを解除する為のパスワード」入力を求められる<br/>はずであり ssh key のパスワードでは「ない」はず。<br/><br/>根本的な原因がローカルに保存された repogitory にあるのか OS X のkeychain.app<br/>にあるのかがわからないので両方を想定...<br/><br/>[これまでにやったこと]<br/><br/># ローカルに保存された repogitory が原因であると想定して。<br/><br/>1) .git/config の url を editor で書き換えてしまったので<br/><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: Keychain.app [1]</a>
+<br/>正しい方法で Remote url を再設定。<br/><br/>origin しか作っていないので origin を指定。</p>
+<pre><code>$ git remote set-url origin git@github.com:midore/midore.github.io.git
+</code></pre>
+<p><br/>現在の状態を確認。</p>
+<pre><code>% git remote -v
+origin  git@github.com:midore/midore.github.io.git (fetch)
+origin  git@github.com:midore/midore.github.io.git (push)
+
+% git config -l
+credential.helper=osxkeychain
+github.user=midore
+# ... 略
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+remote.origin.url=git@github.com:midore/midore.github.io.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
+</code></pre>
+<p><br/>2) git-credential-osxkeychain の設定<br/>詳細=&gt; <a href='./blog/2013/04/git-credential-osxkeychain.html'>git-credential-osxkeychain</a>
+<br/><br/># Keychain.app のスリープ設定が原因であると想定して。<br/><br/>1) 新規に keychain を作成。仮に名前を mygit にしておく。<br/><br/>2) Keychain.app 内の login keychain に保存していた github.com の ssh key を<br/>新規作成した mygit keychain に移動。<br/><br/>3) mygit keychain の設定においてスリープ中にロック「しない」ようにした。<br/><br/>4) mygit keychain に保存した github.com 用 ssh key 鍵をクリックし<br/>Access Control （アクセス制御欄）を開いて<br/>Ask for keychain password にチェックをいれて保存。<br/># これまで（OS X 10.7 時代）にここのチェックを手動で入れたことなんて一度もなかったけど。<br/><br/>5) 念の為にマシンごと再起動。<br/>なぜ再起動かというと</p>
+<pre><code>% launchctl list | grep ssh
+... org.openbsd.ssh-agent
+</code></pre>
+<p>この Agent が動いているらしいと下記で知ったから。<br/><br/><a href='https://help.github.com/articles/working-with-ssh-key-passphrases'>Working with SSH key passphrases · github:help</a>
+<br/>を経由<br/><a href='http://www.dribin.org/dave/blog/archives/2007/11/28/ssh_agent_leopard/'>ssh-agent on Mac OS X 10.5 (Leopard) - Dave Dribin&apos;s Blog</a>
+<br/><br/>私にはこの Agent を初期化する方法がわからないのでマシンごと再起動した。<br/><br/># 再起動後ログイン直後、login keychain 以外の自分で作った keychain はロックされ<br/># ていることを確認。<br/><br/>[現在の状況]<br/>ssh-agent プロセスは存在していないことを確認後、</p>
+<pre><code>% cd  ~/midore.github.io 用のリポジトリ
+# 適当に file を編集し git commit し
+% git push origin master
+</code></pre>
+<p><br/>1) 再起動直後<br/><br/>再起動直後は、手動で作成した mygit keychain はロックされていたので<br/>mygit keychain のロックを解除するパスワードを「従来どおりに」求められた。<br/>なんの問題もなく git push できた...（成功した）<br/># ssh-agent のプロセスは kill しておく。<br/><br/>2) 一旦スリープしスリープから復帰後に再び git push したらどうか？<br/>mygit keychain はスリープ中に自動的にロックしない設定にしてあるので<br/>スリープから復帰した後も mygit keychain はロックされていない。<br/>この状態で<br/>git push origin master<br/>してみるとロックは解除されたままだからか？すんなりと成功した。<br/># ssh-agent のプロセスは kill しておく。<br/><br/>3) 2) まで成功したので厳しい設定に戻して git push してみたらどうなるか？<br/><br/>mygit keychanin の設定を開き、スリープ時にロックする　と　x分後に<br/>自動的にロックするにチェックを入れる。<br/>github.com の ssh key をクリックして Access Control 欄の<br/>keychain password を ask するにチェックが入っているのを確認したら鍵ロックをかけておく。<br/><br/>そして、しばらくほったらかしてスリープさせておく。<br/><br/>スリープから復帰後<br/>% git push origin master<br/><br/>mygit keychain はロックされていたのだから、ロック解除するパスワードを<br/>たずねられる「はず」が、それがなくていきなり git push できてしまった。<br/>ひょっとしたら 私は2）の最後にssh-agent プロセスを kill し忘れていたのだろうか？<br/><br/>Keycchain.app を開いて mygit keychain をみてみると鍵はロックされたままに<br/>なっていた。こんなことは初めてだ。謎。たったいま、git push できたのなら<br/>mygit keychain はロック解除されていなければおかしいと思うんだが...。<br/>鍵がロックされたままでgit push できてしまったなんて、初めて。<br/>ssh-agent のプロセスが鍵のロック解除を要求しなかったなんて。<br/><br/><br/>その状態で</p>
+<pre><code>% ps ax | grep ssh
+% kill　&lt;/usr/bin/ssh-agent のプロセスナンバー&gt;
+</code></pre>
+<p>でプロセスをなくしてからもう一度<br/>git push origin master<br/>すると、今度は正しく mygit keychain をロック解除するパスワードをたずねられ<br/>ロック解除すると git push 成功した。<br/><br/>それにしても根本的な原因はなんなのか...。</p>
+</div>
+</div>
+
+</div>
+
+  </body>
+</html>
+

@@ -19,6 +19,92 @@
 
 <div id='entry'>
 <div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp-5.html'>OS X 10.8.3: Keychain.app [5]</a></h3><h3 class='entry_published'>2013-04-12</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
+</div>
+<div id='entry_content'>
+<p>これまでの経緯。（記事タイトルを統一した）<br/><a href='./blog/2013/04/os-x-1083-keychainapp-2.html'>OS X 10.8.3: Keychain.app [4]</a>
+<br/>&lt;a href=&apos;./blog/2013/04/os-x-1083-keychainapp.html&apos;&gt;OS X 10.8.3: Keychain.app [3]&lt;a&gt;<br/><a href='./blog/2013/04/keychainapp.html'>OS X 10.8.3: Keychain.app [2]</a>
+<br/><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: Keychain.app [1]</a>
+<br/><br/>OS X 10.8.3 Keychain.app のバージョンは 7.0</p>
+<pre><code>% git --version
+git version 1.8.2
+</code></pre>
+<p><br/>[問題]<br/>github.com に ssh でアクセスする為の ssh key は既に Keychain.app に保存済みなのに<br/>github の midore.github.io に対して ssh で git push origin master すると<br/>ssh-keygen で鍵を作成した時に設定したパスワードの入力を「再度」求められてしまう。<br/>（ただしkeychain.app がロックされていなければ発生しない場合もある。）<br/><br/>本来ならば「keychain.app のロックを解除する為のパスワード」入力を求められる<br/>はずであり ssh key のパスワードでは「ない」はず。<br/><br/>根本的な原因がローカルに保存された repogitory にあるのか OS X のkeychain.app<br/>にあるのかがわからないので両方を想定...<br/><br/>[これまでにやったこと]<br/><br/># ローカルに保存された repogitory が原因であると想定して。<br/><br/>1) .git/config の url を editor で書き換えてしまったので<br/><a href='./blog/2013/04/draft-title.html'>OS X 10.8.3: Keychain.app [1]</a>
+<br/>正しい方法で Remote url を再設定。<br/><br/>origin しか作っていないので origin を指定。</p>
+<pre><code>$ git remote set-url origin git@github.com:midore/midore.github.io.git
+</code></pre>
+<p><br/>現在の状態を確認。</p>
+<pre><code>% git remote -v
+origin  git@github.com:midore/midore.github.io.git (fetch)
+origin  git@github.com:midore/midore.github.io.git (push)
+
+% git config -l
+credential.helper=osxkeychain
+github.user=midore
+# ... 略
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+remote.origin.url=git@github.com:midore/midore.github.io.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
+</code></pre>
+<p><br/>2) git-credential-osxkeychain の設定<br/>詳細=&gt; <a href='./blog/2013/04/git-credential-osxkeychain.html'>git-credential-osxkeychain</a>
+<br/><br/># Keychain.app のスリープ設定が原因であると想定して。<br/><br/>1) 新規に keychain を作成。仮に名前を mygit にしておく。<br/><br/>2) Keychain.app 内の login keychain に保存していた github.com の ssh key を<br/>新規作成した mygit keychain に移動。<br/><br/>3) mygit keychain の設定においてスリープ中にロック「しない」ようにした。<br/><br/>4) mygit keychain に保存した github.com 用 ssh key 鍵をクリックし<br/>Access Control （アクセス制御欄）を開いて<br/>Ask for keychain password にチェックをいれて保存。<br/># これまで（OS X 10.7 時代）にここのチェックを手動で入れたことなんて一度もなかったけど。<br/><br/>5) 念の為にマシンごと再起動。<br/>なぜ再起動かというと</p>
+<pre><code>% launchctl list | grep ssh
+... org.openbsd.ssh-agent
+</code></pre>
+<p>この Agent が動いているらしいと下記で知ったから。<br/><br/><a href='https://help.github.com/articles/working-with-ssh-key-passphrases'>Working with SSH key passphrases · github:help</a>
+<br/>を経由<br/><a href='http://www.dribin.org/dave/blog/archives/2007/11/28/ssh_agent_leopard/'>ssh-agent on Mac OS X 10.5 (Leopard) - Dave Dribin&apos;s Blog</a>
+<br/><br/>私にはこの Agent を初期化する方法がわからないのでマシンごと再起動した。<br/><br/># 再起動後ログイン直後、login keychain 以外の自分で作った keychain はロックされ<br/># ていることを確認。<br/><br/>[現在の状況]<br/>ssh-agent プロセスは存在していないことを確認後、</p>
+<pre><code>% cd  ~/midore.github.io 用のリポジトリ
+# 適当に file を編集し git commit し
+% git push origin master
+</code></pre>
+<p><br/>1) 再起動直後<br/><br/>再起動直後は、手動で作成した mygit keychain はロックされていたので<br/>mygit keychain のロックを解除するパスワードを「従来どおりに」求められた。<br/>なんの問題もなく git push できた...（成功した）<br/># ssh-agent のプロセスは kill しておく。<br/><br/>2) 一旦スリープしスリープから復帰後に再び git push したらどうか？<br/>mygit keychain はスリープ中に自動的にロックしない設定にしてあるので<br/>スリープから復帰した後も mygit keychain はロックされていない。<br/>この状態で<br/>git push origin master<br/>してみるとロックは解除されたままだからか？すんなりと成功した。<br/># ssh-agent のプロセスは kill しておく。<br/><br/>3) 2) まで成功したので厳しい設定に戻して git push してみたらどうなるか？<br/><br/>mygit keychanin の設定を開き、スリープ時にロックする　と　x分後に<br/>自動的にロックするにチェックを入れる。<br/>github.com の ssh key をクリックして Access Control 欄の<br/>keychain password を ask するにチェックが入っているのを確認したら鍵ロックをかけておく。<br/><br/>そして、しばらくほったらかしてスリープさせておく。<br/><br/>スリープから復帰後<br/>% git push origin master<br/><br/>mygit keychain はロックされていたのだから、ロック解除するパスワードを<br/>たずねられる「はず」が、それがなくていきなり git push できてしまった。<br/>ひょっとしたら 私は2）の最後にssh-agent プロセスを kill し忘れていたのだろうか？<br/><br/>Keycchain.app を開いて mygit keychain をみてみると鍵はロックされたままに<br/>なっていた。こんなことは初めてだ。謎。たったいま、git push できたのなら<br/>mygit keychain はロック解除されていなければおかしいと思うんだが...。<br/>鍵がロックされたままでgit push できてしまったなんて、初めて。<br/>ssh-agent のプロセスが鍵のロック解除を要求しなかったなんて。<br/><br/><br/>その状態で</p>
+<pre><code>% ps ax | grep ssh
+% kill　&lt;/usr/bin/ssh-agent のプロセスナンバー&gt;
+</code></pre>
+<p>でプロセスをなくしてからもう一度<br/>git push origin master<br/>すると、今度は正しく mygit keychain をロック解除するパスワードをたずねられ<br/>ロック解除すると git push 成功した。<br/><br/>それにしても根本的な原因はなんなのか...。</p>
+</div>
+</div>
+
+<div id='entry'>
+<div id='entry_header'>
+<h3 class='entry_title'><a href='./blog/2013/04/git-credential-osxkeychain.html'>git-credential-osxkeychain</a></h3><h3 class='entry_published'>2013-04-12</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
+</div>
+<div id='entry_content'>
+<p>Set Up Git · github:help<br/>https://help.github.com/articles/set-up-git<br/><br/>を読みながら設定。<br/># 自分でインストースした git 1.8.2 を使用。</p>
+<pre><code>% git credential-osxkeychain
+Usage: git credential-osxkeychain &lt;get|store|erase&gt;
+</code></pre>
+<p>になった。<br/><br/>どこにあるのか？</p>
+<pre><code>$ su &lt;admin-user&gt;
+$ cd /
+$ sudo find ./ -path &quot;*credential-osxkeychain*&quot;
+...略
+.//usr/local/git/bin/git-credential-osxkeychain
+</code></pre>
+<p>最近インストールした git は git-credential-osxkeychain を default で持っていた<br/>のでダウンロードの必要はなかったけれどダウンロードしておいた。<br/><br/>一般ユーザーに戻って</p>
+<pre><code>% git config --global credential.helper osxkeychain
+%
+% more ~/.gitconfig
+# ... 略
+[credential]
+        helper = osxkeychain
+</code></pre>
+<p>~/.config にヘルパーが追加されたことを確認した。<br/></p>
+<blockquote>
+<p>The next time you clone an HTTPS URL that requires a password you will be prompted for your username and password, and to grant access to the OSX     keychain. After you&apos;ve done this, the username and password are stored in your keychain and you won&apos;t be required to type them in to git again.</p></blockquote>
+<p><br/>次の機会に HTPPS　で clone した時 あなたは username *1<br/>と password を要求され Keychain.app にそれらを譲渡する。<br/>そうすると username と password は keychain.app  に Store されて入力を再び要求されなくなる。<br/><br/>らしい？ので、次の機会に https で何か clone したらこの続きを書くかもしれない。<br/><br/># *1<br/># username とはブラウザで github.com にサインインするときに使用しているもの。</p>
+</div>
+</div>
+
+<div id='entry'>
+<div id='entry_header'>
 <h3 class='entry_title'><a href='./blog/2013/04/os-x-1083-keychainapp-2.html'>OS X 10.8.3: Keychain.app [4]</a></h3><h3 class='entry_published'>2013-04-11</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
 </div>
 <div id='entry_content'>
@@ -63,90 +149,6 @@ blog/archives/配下
 <div id='entry_content'>
 <p><a href='./blog/2013/04/keychainapp.html'>OS X 10.8.3: Keychain.app [2]</a>の続き。
 <br/><br/>結局 git のバージョンをあげたら<br/>(Xcode に入っていた git を使うのをやめて1.8系にした)<br/>あっさり解決。<br/><br/>Keychain.app がロックされている時に git push すると以前のように<br/>ユーザーパスワードを尋ねてくれるようになった。よかった。<br/><br/>とおもいきや、不定期に（？）Keychain.app がロックされている時に git push すると<br/>またもや ssh key のパスワードを尋ねられてしまったので<br/>その時にパスワードを入力することはしないでキャンセルし<br/>おもむろに ssh-agent のプロセスを kill してみて git push しなおすと、<br/>Keychain.app は従来どおりにロック解除するユーザーパスワードを求めてくれたので、<br/>そのまま git push することができた。<br/><br/>git のバージョンは関係なかったのかな...</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/project-mygh.html'>Project myGh</a></h3><h3 class='entry_published'>2013-04-09</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mygh.html'>Mygh</a></h3>
-</div>
-<div id='entry_content'>
-<p>myGh | https://github.com/midore/myGh.git は HTML ファイルを作成したり管理する為のリポジトリ。（主に midore.github.io の）<br/><br/>最近きめた仕様。<br/><br/>下書き用テキストファイルの作成。</p>
-<pre><code>% ./mygh-run.rb -draft
-</code></pre>
-<p><br/>下書きテキストファイル一覧。e でファイル編集。MacVim.app 起動。</p>
-<pre><code>% ./mygh-run.rb -l
-------------------------------------------------------------------------------------------
-	status  |  Publishd or Draft Date    |          title              (category)
-------------------------------------------------------------------------------------------
-1	[-] [-] [2013/04/09 Tue AM 09:08:29] [Draft Title] ()
-
-# Draft Entry
-Select Request [i/e/t/x/p/r/h]:
-# e リターン
-</code></pre>
-<p><br/>下書きテキストファイル編集後 p を選択すると HTML ファイルを作成し指定した場所に保存。<br/>（mygh-conf で指定した midore.github.io のローカルにあるリポジトリ内の blog/ 配下）<br/>テキストファイルには公開日時や uri などが付与され<br/>/path/to/data/draft/ から /path/to/data/post へ移動。<br/>（mygh-conf で指定したデータディレクトリ）</p>
-<pre><code>% ./mygh-run.rb -l
-------------------------------------------------------------------------------------------
-	status  |  Publishd or Draft Date    |          title              (category)
-------------------------------------------------------------------------------------------
-1	[-] [-] [2013/04/09 Tue AM 09:08:29] [myGh page.rb] (Git,myGh)
-
-# Draft Entry
-Select Request [i/e/t/x/p/r/h]:
-# p リターンすると下書きではなくなり % ./mygh-run.rb -l で出現しなくなる。
-</code></pre>
-<p><br/>HTML ファイルとして保存した記事一覧。</p>
-<pre><code>% ./mygh-run.rb -l post
-------------------------------------------------------------------------------------------
-	status  |  Publishd or Draft Date    |          title              (category)
-------------------------------------------------------------------------------------------
-1	[+] [+] [2013/04/09 Tue AM 07:59:02] [keychain.app] (MountainLion,Git,SSH)
-2	[+] [+] [2013/04/07 Sun AM 10:55:57] [OS X 10.8.3: ssh keys in keychain.app] (SSH,git,MountainLion)
-3	[+] [+] [2013/04/07 Sun AM 10:25:35] [midore.github.io] (git)
-Select NO:
-# 番号を入力しないでリターンで終了
-</code></pre>
-<p><br/>blog/blogindex.html などを一斉に更新する時は -index all</p>
-<pre><code>% ./mygh-run.rb -index all
-</code></pre>
-<p>個別に指定する時は<br/>-index blog =&gt; blog/blogindex.html<br/>-index word =&gt; blog/categoryindex.html<br/>-index year =&gt; blog/archiveindex.html<br/>-page word =&gt; blog/category/配下<br/>-page year =&gt; blog/archives/配下<br/><br/><br/>記事をHTMLファイルとして出力した後に /path/to/data/post 内のテキストファイルを編集すると<br/>HTML ファイルの内容と Text ファイルの内容は不一致になる為 HTML ファイルの<br/>アップデートが必要になる。u すると編集したテキストファイルの内容に従って<br/>HTML ファイルを上書きする。</p>
-<pre><code>% ./mygh-run.rb -l post
-------------------------------------------------------------------------------------------
-	status  |  Publishd or Draft Date    |          title              (category)
-------------------------------------------------------------------------------------------
-1	[+] [-] [2013/04/09 Tue AM 07:59:02] [keychain.app] (MountainLion,Git,SSH)
-2	[+] [+] [2013/04/07 Sun AM 10:55:57] [OS X 10.8.3: ssh keys in keychain.app] (SSH,git,MountainLion)
-3	[+] [+] [2013/04/07 Sun AM 10:25:35] [midore.github.io] (git)
-Select NO:
-1
-# Need Update Entry
-Select Request [i/e/t/x/u/r/h]:
-# u リターン
-</code></pre>
-<p><br/>ローカルにある midore.github.io の為のリポジトリに移動し<br/>(mygh-conf に記入したディレクトリ　/path/to/my-github-io-repogitory )<br/>HTML files が保存されているの<br/>git push -u origin master すると http://midore.github.io/blog/配下 が更新される。</p>
-<pre><code>% cd  （自分の github.io のリポジトリ）
-% git status
-# git add ... git commit ... など
-% git push -u origin master
-</code></pre>
-<p><br/>[メモ]<br/>1) オプション<br/>下書き記事一覧は -l で表示。公開した記事一覧は -l post で表示。<br/>といったようにオプションで一覧内容を区別してみたが便利なのか不便なのか<br/>わからなくなってきている。<br/>-l で下書きも公開も両方表示された方が便利かもしれない...。<br/>-l post した時に公開した記事「だけ」が表示されるのは維持しつつ。<br/><br/>2) status 欄<br/>[-][-] =&gt; 下書きファイルである。 /path/to/data/draft に保存されている。<br/>[+][+] =&gt; 公開したファイルである。 /path/to/data/post に保存されている。<br/>[+][-] =&gt; 公開したファイルであるが公開後にテキストファイルが変更されている。<br/>/path/to/data/post に保存されている。<br/><br/>テキストファイルの File.mtime とテキストファイルに記述されている--updated が同一ならば<br/>[+][+]<br/>で、テキストファイルの File.mtime とテキストファイルに記述されている--updated が異なると<br/>テキストファイルは編集されていると判断し<br/>[+][-]<br/>と表示。<br/>これは myGh | https://github.com/midore/myGh.git の</p>
-<pre><code>#  lib/myghblog/entry.rb
-class ViewEntry
-  ...(略)
-  def set_view_status
-</code></pre>
-<p>に記述。<br/># @uri が空欄なら下書きファイルとみなすことにしてあるが、実際にはHTMLファイルが<br/># 存在していた場合は下書きとは言えない。この場合については何も考慮していない...<br/><br/>3) blogindex.html 更新のタイミング<br/>blog/blogindex.html や blog/categoryindex.html などを更新するタイミングは完全手動。<br/><br/>[追記]<br/>%s/レポ/リポ</p>
-</div>
-</div>
-
-<div id='entry'>
-<div id='entry_header'>
-<h3 class='entry_title'><a href='./blog/2013/04/keychainapp.html'>OS X 10.8.3: keychain.app [2]</a></h3><h3 class='entry_published'>2013-04-09</h3><h3 class='entry_category'><a href='./blog/category/git.html'>Git</a> | <a href='./blog/category/mountainlion.html'>MountainLion</a> | <a href='./blog/category/ssh.html'>SSH</a> | <a href='./blog/category/keychain.html'>Keychain</a></h3>
-</div>
-<div id='entry_content'>
-<p><a href='./blog/2013/04/draft-title.html'>先日</a> の 件。
-<br/><br/>新しいリポジトリーを作らなくても git push しようとすると keychain.app　が github の ssh　key のパスワードをいちいち尋ねてくる！と判明。驚く。<br/><br/>git push する前に keychain.app のロックを解除しておけば尋ねられないようだが...。<br/><br/>keychain.app がロックされている時、解除するユーザーのパスワードを求めないでいきなり git のssh パスワードを求めてくるのはなぜか。この鍵束は壊れてるのかな...。<br/><br/><br/># この記事の title 変更</p>
 </div>
 </div>
 
